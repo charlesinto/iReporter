@@ -1,0 +1,57 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts":{
+    "start:dev": "set NODE_ENV=DEVELOPMENT&& nodemon ./server/index.js --exec babel-node --require dotenv/config",
+    "start": "set NODE_ENV=PRODUCTION&& npm run build && node ./dist/index.js",
+    "build": "babel server -d dist --require dotenv/config",
+    "test": "set NODE_ENV=TEST&& nyc mocha server/test/test.js --compilers js:babel-core/register --timeout 20000 --exit",
+    "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlesinto/iReporter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charlesinto/iReporter/issues"
+  },
+  "homepage": "https://github.com/charlesinto/iReporter#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "pg": "^7.6.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "dotenv": "^6.1.0",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^0.4.5",
+    "jasmine": "^3.3.0",
+    "jasmine-console-reporter": "^3.1.0",
+    "jasmine-node": "^1.16.2",
+    "jasmine-supertest": "^1.0.0",
+    "jsonwebtoken": "^8.4.0",
+    "mocha": "^5.2.0",
+    "multer": "^1.4.1",
+    "nodemon": "^1.18.6",
+    "nyc": "^13.1.0",
+    "path": "^0.12.7",
+    "socket.io": "^2.1.1",
+    "validator": "^10.9.0"
+  }
+}
