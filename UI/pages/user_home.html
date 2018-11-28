@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>iReporter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/dependencies/css/user_home.css" />
+    <link rel="stylesheet" href="/dependencies/css/animation.css" />
+    <link href="https://unpkg.com/ionicons@4.4.8/dist/css/ionicons.min.css" rel="stylesheet">
+</head>
+<body>
+        <header id="nav-header">
+               
+            <ul class="mobile-nav">
+            <li>
+                <span id="open-menu">&#9776;</span>
+            </li>
+            <li class="company-name"><a href="#">iReporter</a></li>
+            
+        </ul>
+        </header>
+    <div>
+
+    
+    <div class="sidenav-bar">
+            <div class="profile-card">
+                    <div class="profile-cover">
+                        <div class="menu-container">
+                            <a class="list-icon" title="Expand" href="javascript:void(0);"></a>
+                            <ul class="profile-actions" style="display: none;">
+                                <li><a href="#">Follow</a></li>
+                                <li><a href="#">Add as Friend</a></li>
+                                <li><a href="#">Like</a></li>
+                            </ul>
+                        </div>
+                        <div class="profile-avatar">
+                            <div class="btns-container">
+                                <div class="profile-links">
+                                    <a class="zoom-avatar" href="#"><img src="https://dl.dropboxusercontent.com/s/5liaxzvwbfuqzpo/zoom.png"></a>
+                                    <a class="read-more" href="#"><img src="https://dl.dropboxusercontent.com/s/62dfoo9h44o58lw/more.png"></a>
+                                    <a class="view-map" href="#"><img src="https://dl.dropboxusercontent.com/s/9ofmihok0h64lvn/location.png"></a>
+                                </div>
+                            </div>
+                            <a href="#"><img src="https://dl.dropboxusercontent.com/s/7pcnqq18skh1myk/avatar.jpg" alt="Anis M" /></a>
+                        </div>
+                        <div class="profile-details">
+                            <h1 class="nametext">Charles Onuorah</h1>
+                            <h6  class="nametext">@charlesonuorah</h6>
+                        </div>
+                    </div>
+                </div>
+            <a href="#" class="active-link"><i class="fa fa-retweet"></i> tweet</a>
+            <a href="#"><i class="fas fa-retweet"></i> timeline</a>
+            <a href="#"><i class="fab fa-font-awesome"></i> groups</a>
+            <a href="#"><i class="far fa-user"></i> profile</a>
+            <a href="#" class="logout"><i class="far fa-user"></i> logout</a>
+      </div>
+      <div class="main">
+          <div id="tweet" class="tabs active">
+              <div class="testimonials">
+                    <section class="card">
+                            <div class="content">
+                                <label class="section">Incident</label>
+                                <div>
+                                     <textarea data-gramm_editor="false" name="styled-textarea" id="styled"  placeholder="Enter comment here.." ></textarea>
+                                </div>
+                                <label class="section">Coordinates</label>
+                                <div>
+                                    <input type="text" placeholder="0,0" disabled>
+                                    <button>Get Coordinates</button>
+                                </div>
+                                <label class="section">Report Type</label>
+                                <div>
+                                        
+                                    <label class="container">Red Flag
+                                        <input type="radio" checked="checked" value="red-flag" name="radio">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="container">Intervention
+                                        <input type="radio" value="intervention" name="radio">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="author">
+                                        <div class="upload-control">
+                                                <label id="bb"> Upload Media
+                                                    <input type="file" id="File" name='myImage'>
+                                                </label> 
+                                        </div>
+                                    <button>tweet</button>
+                                </div>
+                            </div>
+                        </section>
+              </div>
+                
+          </div>
+          <div id="timeline" class="tabs">
+
+            </div>
+            <div id="groups" class="tabs">
+
+            </div>
+            <div id="profile", class="tabs">
+
+            </div>
+        </div>
+      <div id="mySidenav" class="">
+            <div class="profile-card">
+                    <div class="profile-cover">
+                        <div class="menu-container">
+                            <a class="list-icon" title="Expand" href="javascript:void(0);"></a>
+                            <ul class="profile-actions" style="display: none;">
+                                <li><a href="#">Follow</a></li>
+                                <li><a href="#">Add as Friend</a></li>
+                                <li><a href="#">Like</a></li>
+                            </ul>
+                        </div>
+                        <div class="profile-avatar">
+                            <div class="btns-container">
+                                <div class="profile-links">
+                                    <a class="zoom-avatar" href="#"><img src="https://dl.dropboxusercontent.com/s/5liaxzvwbfuqzpo/zoom.png"></a>
+                                    <a class="read-more" href="#"><img src="https://dl.dropboxusercontent.com/s/62dfoo9h44o58lw/more.png"></a>
+                                    <a class="view-map" href="#"><img src="https://dl.dropboxusercontent.com/s/9ofmihok0h64lvn/location.png"></a>
+                                </div>
+                            </div>
+                            <a href="#"><img src="https://dl.dropboxusercontent.com/s/7pcnqq18skh1myk/avatar.jpg" alt="Anis M" /></a>
+                        </div>
+                        <div class="profile-details">
+                            <h1 class="nametext">Charles Onuorah</h1>
+                            <h6  class="nametext">@charlesonuorah</h6>
+                        </div>
+                    </div>
+                </div>
+
+            <a href="javascript:void(0)" class="closebtn" id="closeMenu" >&times;</a>
+            
+            <a href="#" class="active-link"><i class="fa fa-retweet"></i> tweet</a>
+            <a href="#"><i class="fas fa-retweet"></i> timeline</a>
+            <a href="#"><i class="fab fa-font-awesome"></i> groups</a>
+            <a href="#"><i class="far fa-user"></i> profile</a>
+            <a href="#" class="logout"><i class="far fa-user"></i> logout</a>
+        </div>
+    <script src="/dependencies/js/user_home.js"></script>
+    <script src="/dependencies/js/toggleNav.js"></script>
+</body>
+</html>
