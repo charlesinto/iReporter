@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import http from 'http';
 import path from 'path';
 import routes from './route';
+import getRedFlagRecords from './route/getRedFlagRecords';
 require('dotenv').config();
 
 const apiVersion = express.Router();
@@ -12,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'UI')));
 app.use(express.static('UI'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use('/api/v1/red-flags', getRedFlagRecords);
 
 let port = process.env.PORT || 5000;
 let server = http.createServer(app)
