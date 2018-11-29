@@ -1,11 +1,13 @@
-window.onload = function(){
+
+document.addEventListener("DOMContentLoaded", function(event) {
     closeMenuBar();
     openMenu();
-}
+})
 
 let closeMenuBar = () =>{
     document.getElementById('closeMenu').addEventListener('click', (e)=> {
         e.stopPropagation();
+
        closeNav();
     })
   }

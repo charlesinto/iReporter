@@ -1,4 +1,11 @@
 window.onload = function(){
+    setUpEvents();
+}
+
+const setUpEvents = () => {
+    document.getElementById('login').addEventListener('click', () => {
+        window.location = window.origin + '/pages/user_home.html'
+    })
     document.getElementsByClassName('login-form')[0].style.display="none";
     document.getElementsByClassName('login')[0].style.background = "none";
     document.getElementsByClassName('login')[0].addEventListener('click', (e) => {

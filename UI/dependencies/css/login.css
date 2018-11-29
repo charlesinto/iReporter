@@ -110,9 +110,9 @@ input, select {
   .container{
     max-width: 500px;
     width: 90%;
-    margin: 0px auto;
+    margin: 10px auto;
     position: relative;
-    top: calc(50% - 300px);
+    /* top: calc(50% - 300px); */
   }
 
   .wrapper{
@@ -138,7 +138,10 @@ input, select {
     clear: both;
     width: 100%;
     box-sizing: border-box;
-    height: 400px;
+    height: fit-content;
+    max-height: 700px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
   }
   
   .input{
