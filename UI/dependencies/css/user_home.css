@@ -72,11 +72,14 @@ div#mySidenav {
     transition: 0.5s;
     padding-top: 60px;
   }
+  #closeMenu{
+      color: #fff !important;
+  }
   div#mySidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #fff;/*#818181;*/
+    /* color: #fff;#818181; */
     display: block;
     transition: 0.3s;
   }
@@ -354,7 +357,11 @@ h6 { font-size: 13px; }
 
 section.card{
     display: flex;
-    flex: 1 !important
+    flex: 1 !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 div.testimonials{
@@ -365,7 +372,9 @@ div.testimonials{
     display: -ms-flex;
     display: flex !important;
     flex: 1 !important;
+    flex-direction: column;
     height: fit-content !important;
+    min-height: 400px;
     padding-bottom: 10px;
     -moz-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
@@ -531,4 +540,53 @@ button.btn {
 label.section{
     margin-top:10px !important;
     color: #900404d6;
+}
+
+div.control{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.maps{
+    display: flex;
+    width:100%;
+    height: 200px;
+    max-height: 350px;
+}
+
+.user-comment{
+    outline:none !important;
+}
+
+.user-story{
+    margin-bottom: 10px;
+}
+
+.underI{
+    color: #34c6d3;
+}
+.red-flag-style{
+    color: #de960f;
+    font-size: 13px
+}
+.intervent-style{
+    color: #48a918;
+    font-size: 13px
+}
+
+.rejected{
+    color: #f10718;
+}
+.resolved{
+    color: #4caf50;
+}
+.container input:checked ~ .under-investigation-mark{
+    background-color: #f5bf30 !important;
+}
+.container input:checked ~ .rejected-mark{
+    background-color: #b71824 !important;
+}
+.container input:checked ~  .resolved-mark{
+    background-color: #4caf50 !important;
 }
