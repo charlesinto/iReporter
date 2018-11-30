@@ -124,3 +124,51 @@ export const postRecord = (req,res) => {
         })
     }
 }
+
+export const updateLocation = (req, res) => {
+    let flagRecord = req.body;
+    if((typeof flagRecord !== 'undefined' && typeof flagRecord.location !== 'undefined') && flagRecord.location !== ' ' ){
+        if(/^\d+$/.test(req.params.id)){
+            const requestId = parseInt(req.params.id)
+            const recordRequested = records.filter(item => item.id === requestId);
+            if(recordRequested.length > 0){
+                records.forEach(record => {
+                    if(record.id === requestId){
+                        record.location = flagRecord.location
+                    }
+                })
+                res.statusCode = 202;
+                res.setHeader('content-type', 'application/json');
+                res.json({
+                    status: 202,
+                    data: [{
+                        requestId,
+                        message: 'Updated Red-flag\'s record location'
+                    }]
+                })
+            }else{
+                res.statusCode = 404;
+                res.setHeader('content-type', 'application/json');
+                res.json({
+                    status: 404,
+                    error: "Record not found"
+                })
+            }
+        }else{
+            res.statusCode = 400;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 400,
+                error: "Invalid Id"
+            })
+        }
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        res.json({
+            status: 400,
+            error: "Invalid request"
+        })
+    }
+    
+}
