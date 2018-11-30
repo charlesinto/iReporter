@@ -75,3 +75,17 @@ export const getRedFlags = (req, res) => {
         data: records
     })
 }
+
+export const getARecord = (req,res) => {
+    if(/^\d+$/.test(req.params.id)){
+        const flagId = parseInt(req.params.id)
+        const selectedRecord = records.filter(record => record.id === flagId);
+        res.statusCode = 200;
+        res.setHeader('content-type', 'application/json');
+        res.json({
+            status: 200,
+            data: selectedRecord
+        })
+    }
+    
+}
