@@ -15,11 +15,12 @@ const newRecord = {
     "status":"draft",
     "Images": [],
     "Videos":[],
-    "comment":"london bridge is falling"
+    "comment":"lina rocks"
 }
 
 const location = {
-    location: '6.4444,3.20000'
+    location: '6.4444,3.20000',
+    comment: 'baba i dey hail'
 }
 
 describe('It should test all the end points', () => {
@@ -155,6 +156,41 @@ describe('It should test all the end points', () => {
        
         it('data should be an array', function(done){
             chai.request(app).patch('/api/v1/red-flags/13/location').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
+                expect(res.body.data).to.be.an('array');
+                done();
+            })
+        })
+        
+    })
+    describe('it should patch a red flag comment',() => {
+        it('response should be an object', function(done){
+            chai.request(app).patch('/api/v1/red-flags/13/comment').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
+                expect(res).to.be.an('object');
+                done();
+            })
+        })
+        it('response to have property status', function(done){
+            chai.request(app).patch('/api/v1/red-flags/13/comment').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
+                expect(res.body).to.have.property('status');
+                done();
+            })
+        })
+        it('response to have property data', function(done){
+            chai.request(app).patch('/api/v1/red-flags/13/comment').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
+                expect(res.body).to.have.property('data');
+                done();
+            })
+        })
+        it('response should have a status of 201',(done)=>{
+            chai.request(app).patch('/api/v1/red-flags/13/comment').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
+                
+                expect(res).to.have.status(202);
+                done();
+            })
+        })
+       
+        it('data should be an array', function(done){
+            chai.request(app).patch('/api/v1/red-flags/13/comment').type('form').set('content-type', 'application/json').send(location).end(function(err,res){
                 expect(res.body.data).to.be.an('array');
                 done();
             })
