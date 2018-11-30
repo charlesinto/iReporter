@@ -172,3 +172,50 @@ export const updateLocation = (req, res) => {
     }
     
 }
+
+export const updateComment = (req,res) => {
+    let flagRecord = req.body;
+    if((typeof flagRecord !== 'undefined' && typeof flagRecord.comment !== 'undefined') && flagRecord.comment !== ' ' ){
+        if(/^\d+$/.test(req.params.id)){
+            const requestId = parseInt(req.params.id)
+            const recordRequested = records.filter(item => item.id === requestId);
+            if(recordRequested.length > 0){
+                records.forEach(record => {
+                    if(record.id === requestId){
+                        record.comment = flagRecord.comment;
+                    }
+                })
+                res.statusCode = 202;
+                res.setHeader('content-type', 'application/json');
+                res.json({
+                    status: 202,
+                    data: [{
+                        requestId,
+                        message: 'Updated Red-flag\'s record comment'
+                    }]
+                })
+            }else{
+                res.statusCode = 404;
+                res.setHeader('content-type', 'application/json');
+                res.json({
+                    status: 404,
+                    error: "Record not found"
+                })
+            }
+        }else{
+            res.statusCode = 400;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 400,
+                error: "Invalid Id"
+            })
+        }
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        res.json({
+            status: 400,
+            error: "Invalid request"
+        })
+    }
+}
