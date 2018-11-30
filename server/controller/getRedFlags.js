@@ -219,3 +219,37 @@ export const updateComment = (req,res) => {
         })
     }
 }
+
+export const deleteRecord = (req,res) => {
+    if(/^\d+$/.test(req.params.id)){
+        const requestId = parseInt(req.params.id);
+        let itemPos = -1;
+        const recordRequested = records.filter((item, pos) => {if(item.id === requestId){itemPos = pos;return true}});
+        if(recordRequested.length > 0){
+            records.splice(itemPos, 1);
+            res.statusCode = 200;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 200,
+                data: [{
+                    requestId,
+                    message: 'red flag record has been deleted'
+                }]
+            })
+        }else{
+            res.statusCode = 404;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 404,
+                error: "Record not found"
+            })
+        }
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        res.json({
+            status: 400,
+            error: "Invalid Id"
+        })
+    }
+}
