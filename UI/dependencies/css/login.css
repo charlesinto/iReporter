@@ -1,3 +1,7 @@
+@import url('./test.css');
+
+
+
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 abbr, address, cite, code,
@@ -102,7 +106,7 @@ input, select {
   }
   
   body{
-    background: linear-gradient(to right, #a7dae8 , #2c652e);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.1) , rgba(0, 0, 0, 0.25));
     font-family: roboto;
     user-select: none;
   }
@@ -116,9 +120,11 @@ input, select {
   }
 
   .wrapper{
-    height: 100vh;
+        margin-top:20px !important;
   }
-  
+  .c-name{
+      margin-left: 10px;
+  }
   .signup,
   .login{
     width: 50%;
@@ -139,7 +145,7 @@ input, select {
     width: 100%;
     box-sizing: border-box;
     height: fit-content;
-    max-height: 700px;
+    max-height: 710px;
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
@@ -159,10 +165,16 @@ input, select {
   .input:focus{
     border: 2px solid #34b3a0;
   }
-  
+  input {
+      color: #111 !important;
+  }
+  /* input:focus{
+      border: 5px solid #111 !important;
+  } */
   .btn{
     width: 100%;
-    background: #34b3a0;
+    /* background: #34b3a0; */
+    background: #444444;
     height: 60px;
     text-align: center;
     line-height: 60px;
@@ -195,4 +207,30 @@ input, select {
     color: #3e3e40;
     font-family: roboto;
   }
-  
+
+#footer {
+    padding: 4rem 0 2rem 0 !important;
+}
+
+label#bb{
+    padding: 10px;
+    margin-top: 10px;
+    background: #4caf50;;
+    display: table;
+    /* color: #000000bd !important; */
+    cursor: pointer;
+    color: #fff;
+}
+
+label.info{
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+
+
+input[type="file"] {
+    display: none;
+}

@@ -174,7 +174,7 @@ em, i {
 p {
   margin: 0 0 2rem 0; }
 section#cta{
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 header.special {
   text-align: center;
@@ -235,8 +235,15 @@ header#nav-header{
 div#slide{
   width:100%;
   height: 100%;
+  background: rgba(0, 0, 0, 0.7);
 }
 @media screen and (max-width: 736px) {
+  .desktop-nav{
+    display:none !important;
+  }
+  .mobile-nav{
+    display: flex !important;
+  }
   h1 {
     font-size: 2.75rem;
     line-height: 1.3; }
@@ -261,7 +268,8 @@ blockquote {
   border-left: solid 0.5rem;
   font-style: italic;
   margin: 0 0 2rem 0;
-  padding: 1rem 0 1rem 2rem; }
+  padding: 1rem 0 1rem 2rem;  max-height: calc(100% - 100px);;
+  overflow: auto;}
 
 code {
   border-radius: 4px;
@@ -420,7 +428,7 @@ button,
   button.primary,
   .button.primary {
     box-shadow: none;
-    background-color: #ce1b28;
+    /* background-color: #ce1b28; */
     color: #ffffff !important; }
     input[type="submit"].primary:hover,
     input[type="reset"].primary:hover,
@@ -586,8 +594,8 @@ textarea {
   input[type="url"]:focus,
   select:focus,
   textarea:focus {
-    border-color: #ce1b28;
-    box-shadow: 0 0 0 1px #ce1b28; }
+    /* border-color: #ce1b28; */
+    /* box-shadow: 0 0 0 1px #ce1b28;*/ }
 
 select {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' preserveAspectRatio='none' viewBox='0 0 40 40'%3E%3Cpath d='M9.4,12.3l10.4,10.4l10.4-10.4c0.2-0.2,0.5-0.4,0.9-0.4c0.3,0,0.6,0.1,0.9,0.4l3.3,3.3c0.2,0.2,0.4,0.5,0.4,0.9 c0,0.4-0.1,0.6-0.4,0.9L20.7,31.9c-0.2,0.2-0.5,0.4-0.9,0.4c-0.3,0-0.6-0.1-0.9-0.4L4.3,17.3c-0.2-0.2-0.4-0.5-0.4-0.9 c0-0.4,0.1-0.6,0.4-0.9l3.3-3.3c0.2-0.2,0.5-0.4,0.9-0.4S9.1,12.1,9.4,12.3z' fill='rgba(0, 0, 0, 0.25)' /%3E%3C/svg%3E"); }
@@ -640,7 +648,13 @@ ul {
     padding-left: 0.325rem; }
   ul.plain {
     list-style: none;
-    padding-left: 0; }
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    align-items: center;
+  
+  }
     ul.plain li {
       margin-bottom: 1rem; }
       ul.plain li .icon {
@@ -917,7 +931,11 @@ table.alt tbody tr td {
       -moz-align-items: center;
       -webkit-align-items: center;
       -ms-align-items: center;
-      align-items: center; }
+      align-items: center; 
+      position: absolute;
+      bottom: 0;
+      margin-bottom: 30px;
+    margin-right: 20px;}
       .testimonials .content .author blockquote {
         margin: 0; }
       .testimonials .content .author .image {
@@ -1016,7 +1034,11 @@ table.alt tbody tr td {
 
 .testimonials .content {
   background: #ffffff;
-  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.025); }
+  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.025);
+  position: relative;
+  /* min-height: 20px; */
+  min-height: 550px !important;
+  max-height: 550px !important; }
   .testimonials .content .credit strong {
     color: #ce1b28; }
 
@@ -1899,7 +1921,7 @@ ul.icons {
     width: 100%;
     height: 100vh;
     border-bottom: 1px solid rgba(64, 66, 63, 0.4);
-    display:none;
+    /* display:none; */
   }
   #banner input, #banner select, #banner textarea {
     color: #ffffff; }
@@ -2107,9 +2129,9 @@ ul.icons {
       display: none; } }
   @media screen and (max-width: 736px) {
     #banner {
-      height: auto !important;
+      height: 100vh !important;
       min-height: 0;
-      padding: 4rem 2rem 4rem 2rem; }
+      /* padding: 4rem 2rem 4rem 2rem; */} 
       #banner .inner {
         width: 100%; }
       #banner h1 {
@@ -2136,7 +2158,7 @@ ul.icons {
 
 /* CTA */
 #cta {
-  background-color: #100f0f;
+  background-color: #fff;
   color: rgba(255, 255, 255, 0.75);
   background-attachment: fixed;
   /* background-image: linear-gradient(rgba(206, 27, 40, 0.25), rgba(206, 27, 40, 0.25)), url(../../images/cta01.jpg); */
@@ -2153,7 +2175,7 @@ ul.icons {
   #cta strong, #cta b {
     color: #ffffff; }
   #cta h1, #cta h2, #cta h3, #cta h4, #cta h5, #cta h6 {
-    color: #ffffff; }
+    color: #000; }
   #cta blockquote {
     border-left-color: rgba(255, 255, 255, 0.25); }
   #cta code {
@@ -3735,7 +3757,7 @@ form .form-control {
 ============ HEADER =====================
 */
 ul.mobile-nav {
-  display: flex;
+  display: none;
   flex: 1;
   justify-content: flex-start;
  align-items: center;
@@ -3751,7 +3773,7 @@ ul.desktop-nav {
     padding: 0;
     overflow: hidden;
     background-color: #333;
-    display:none;
+    /* display:none; */
 }
 
 ul.desktop-nav li {
@@ -3847,3 +3869,29 @@ span#open-menu{
   }
 }
 
+section.footerdiv1 {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.write-description{
+  font-size: 200%;
+  color: #fff;
+}
+
+.c-name{
+  font-size: 300% !important;
+  font-weight: 700;
+}
+
+.slang{
+  width: fit-content;
+}
+
+.a-b-name{
+  margin: 0 auto;
+  top: 30%;
+  position: absolute;
+  margin-left: 10px;
+}
