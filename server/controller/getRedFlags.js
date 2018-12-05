@@ -80,11 +80,28 @@ export const getARecord = (req,res) => {
     if(/^\d+$/.test(req.params.id)){
         const flagId = parseInt(req.params.id)
         const selectedRecord = records.filter(record => record.id === flagId);
-        res.statusCode = 200;
+        if(selectedRecord.length > 0){
+            res.statusCode = 200;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 200,
+                report: selectedRecord
+            })
+        }else{
+            res.statusCode = 404;
+            res.setHeader('content-type', 'application/json');
+            res.json({
+                status: 404,
+                message: `REQUEST ID NOT FOUND`
+            })
+        }
+        
+    }else{
+        res.statusCode = 400;
         res.setHeader('content-type', 'application/json');
         res.json({
-            status: 200,
-            data: selectedRecord
+            status: 400,
+            error: "Invalid request id"
         })
     }
     
@@ -103,7 +120,8 @@ export const postRecord = (req,res) => {
                 status: 201,
                 data: [{
                     id,
-                    message: 'Created Red-flag record'
+                    message: 'Created Red-flag record',
+                    report: newflagRecord
                 }]
             })
         }else{
@@ -131,10 +149,12 @@ export const updateLocation = (req, res) => {
         if(/^\d+$/.test(req.params.id)){
             const requestId = parseInt(req.params.id)
             const recordRequested = records.filter(item => item.id === requestId);
+            let data = {};
             if(recordRequested.length > 0){
                 records.forEach(record => {
                     if(record.id === requestId){
                         record.location = flagRecord.location
+                        data = record
                     }
                 })
                 res.statusCode = 202;
@@ -143,7 +163,8 @@ export const updateLocation = (req, res) => {
                     status: 202,
                     data: [{
                         requestId,
-                        message: 'Updated Red-flag\'s record location'
+                        message: 'Updated Red-flag\'s record location',
+                        report: data
                     }]
                 })
             }else{
@@ -179,10 +200,12 @@ export const updateComment = (req,res) => {
         if(/^\d+$/.test(req.params.id)){
             const requestId = parseInt(req.params.id)
             const recordRequested = records.filter(item => item.id === requestId);
+            let data = {};
             if(recordRequested.length > 0){
                 records.forEach(record => {
                     if(record.id === requestId){
                         record.comment = flagRecord.comment;
+                        data = record;
                     }
                 })
                 res.statusCode = 202;
@@ -191,7 +214,8 @@ export const updateComment = (req,res) => {
                     status: 202,
                     data: [{
                         requestId,
-                        message: 'Updated Red-flag\'s record comment'
+                        message: 'Updated Red-flag\'s record comment',
+                        report: data
                     }]
                 })
             }else{

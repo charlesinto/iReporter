@@ -58,7 +58,7 @@ describe('It should test all the end points', () => {
             })
         })
     })
-    describe('it should get all red flag records',() => {
+    describe('it should get a red flag records',() => {
         it('response should be an object', function(done){
             chai.request(app).get('/api/v1/red-flags/14').type('form').set('content-type', 'application/json').end(function(err,res){
                 expect(res).to.be.an('object');
@@ -71,9 +71,9 @@ describe('It should test all the end points', () => {
                 done();
             })
         })
-        it('response to have property data', function(done){
+        it('response to have property report', function(done){
             chai.request(app).get('/api/v1/red-flags/12').type('form').end(function(err,res){
-                expect(res.body).to.have.property('data');
+                expect(res.body).to.have.property('report');
                 done();
             })
         })
@@ -85,9 +85,9 @@ describe('It should test all the end points', () => {
             })
         })
        
-        it('data should be an array', function(done){
+        it('report should be an array', function(done){
             chai.request(app).get('/api/v1/red-flags/13').type('form').set('content-type', 'application/json').end(function(err,res){
-                expect(res.body.data).to.be.an('array');
+                expect(res.body.report).to.be.an('array');
                 done();
             })
         })
