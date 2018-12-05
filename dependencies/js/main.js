@@ -4,6 +4,7 @@ let slideIndex = 0;
 window.onload = function(){
   closeMenuBar();
   openMenu();
+  setUpEvents();
 }
 
 function carousel() {
@@ -43,3 +44,10 @@ let closeNav = () => {
   document.getElementById("mySidenav").style.width = "0";
       
 }
+
+// const setUpEvents = () => {
+//   document.getElementById('login').addEventListener('click', (e)=> {
+//     e.stopPropagation();
+//     window.location = window.origin + 'pages/login.html'
+//   })
+// }
