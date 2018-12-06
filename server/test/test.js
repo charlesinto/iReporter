@@ -3,6 +3,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import fs from 'fs';
 import path from 'path';
+import Helper from '../Helper';
 const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -21,6 +22,15 @@ const newRecord = {
 const location = {
     location: '6.4444,3.20000',
     comment: 'baba i dey hail'
+}
+
+const createuser = {
+    "email":"onuorahchibuike@gmail.com",
+ 	"firstname":"charles",
+ 	"lastname":"onuorah",
+ 	"phonenumber":"08163113450",
+ 	"username":"charlesinto",
+ 	"password": "3450"
 }
 
 describe('It should test all the end points', () => {
@@ -254,5 +264,66 @@ describe('It should test all the end points', () => {
             })
         })
         
+    })
+    describe('it should sign up a user',() => {
+        beforeEach( done => {
+            let sql = `CREATE TABLE IF NOT EXISTS BASE_USER (userid SERIAL, firstname varchar(50) NOT NULL, lastname varchar(50) NOT NULL, 
+            email varchar(100) NOT NULL, phonenumber varchar(25) NOT NULL, username varchar(50) NOT NULL, 
+            password varchar(100) NOT NULL, profile_pic_path varchar(250),
+             roleid INTEGER NOT NULL, rolename varchar(50) NOT NULL, datecreated timestamp NOT NULL)`
+             Helper.executeQuery(sql)
+             .then((result)=> done())
+             .catch(err => done());
+        })
+        afterEach(done => {
+            let sql = 'DROP TABLE IF EXISTS BASE_USER CASCADE';
+            Helper.executeQuery(sql)
+            .then((result) => done())
+            .catch((err) => done());
+        })
+        it('response should be an object', (done) => {
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res) => {
+                expect(res).to.be.an('object');
+                done();
+            })
+        })
+        it('response to have property status', (done) => {
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res) => {
+                expect(res.body).to.have.property('status');
+                done();
+            })
+        })
+        
+        it('response should have a status of 201',(done)=>{
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res) => {
+                
+                expect(res).to.have.status(201);
+                done();
+            })
+        })
+        it('response to have property data', function(done){
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res)=> {
+                expect(res.body).to.have.property('data');
+                done();
+            })
+        })
+        it('data should be an array', function(done){
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res)=> {
+                expect(res.body.data).to.be.an('array');
+                done();
+            })
+        })
+        it('data should have property token', function(done){
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res)=> {
+                expect(res.body.data[0]).to.have.property('token');
+                done();
+            })
+        })
+        it('data should have property user', function(done){
+            chai.request(app).post('/api/v1/auth/signup').type('form').send(createuser).end((err,res)=> {
+                expect(res.body.data[0]).to.have.property('user');
+                done();
+            })
+        })
     })
 })
