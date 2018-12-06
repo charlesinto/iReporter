@@ -112,7 +112,8 @@ export const postRecord = (req,res) => {
     if(typeof flagRecord !== 'undefined'){
         if((typeof flagRecord.comment !== 'undefined' && flagRecord.comment !== '') && (typeof flagRecord.createdBy !== 'undefined')){
             const id = records.length + 20;
-            const newflagRecord = {createdOn:flagRecord.createdOn, createdBy: flagRecord.createdOn,type:flagRecord.type,location:flagRecord.location,status:flagRecord.status,Images:flagRecord.Images,Videos:flagRecord.Videos,comment:flagRecord.comment, id}
+            const { createdOn,createdBy,type,location, status, Images, Videos, comment } = flagRecord
+            const newflagRecord = {createdOn, createdBy,type, location, status, Images, Videos, id}
             records.push(newflagRecord);
             res.statusCode = 201;
             res.setHeader('content-type', 'application/json');
