@@ -236,3 +236,8 @@ label.info{
 input[type="file"] {
     display: none;
 }
+
+a {
+    color: #fff !important;
+    text-decoration: none !important;
+}
