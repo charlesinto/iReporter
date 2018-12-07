@@ -235,7 +235,7 @@ header#nav-header{
     height: 50px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
     align-items: center;
     background: #333;
     /* padding: 0.5rem; */
@@ -3796,6 +3796,11 @@ ul.desktop-nav {
     background-color: #333;
     /* display:none; */
 }
+ul.header {
+  display: flex;
+    /* align-self: flex-start; */
+    flex: 1;
+}
 
 ul.desktop-nav li {
     float: left;
@@ -3940,3 +3945,4 @@ section.footerdiv1 {
   font-size:200%;
   color: #111;
 }
+
