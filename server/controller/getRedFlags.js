@@ -67,40 +67,70 @@ export const getARecord = (req,res) => {
 }
 
 export const postRecord = (req,res) => {
-    let flagRecord = req.body;
-    if(typeof flagRecord !== 'undefined'){
-        if((typeof flagRecord.comment !== 'undefined' && flagRecord.comment !== '') && (typeof flagRecord.createdBy !== 'undefined')){
-            const id = records.length + 20;
-            const { createdOn,createdBy,type,location, status, Images, Videos, comment } = flagRecord
-            const newflagRecord = {createdOn, createdBy,type, location, status, Images, Videos, id}
-            records.push(newflagRecord);
-            res.statusCode = 201;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 201,
-                data: [{
-                    id,
-                    message: 'Created Red-flag record',
-                    report: newflagRecord
-                }]
-            })
-        }else{
-            res.statusCode = 400;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 400,
-                error: "comment or createdBy is required"
-            })
+    const flagRecord = Helper.trimWhiteSpace(req.body);
+    const { userid, rolename} = req.token;
+    if(!Helper.validateKey(flagRecord, ['comment','location', 'type'])){
+        return Helper.displayMessage(res,400,'Bad Request,one or more keys is missing')
+    }
+    const { createdBy,type,location, Images, Videos, comment } = flagRecord;
+    const recordid = 3000 + new Date().getUTCMilliseconds();
+    let imageparams = '', videoparams = '';
+    if(Videos.length){
+
+        const videos = [];
+        for(let i = 0; i < Videos.length; i++){
+            videos.push(`(${recordid},'${Videos[i].videotitle}','${Videos[i].videopath}', NOW())`);
         }
+        videoparams = videos.join()
+        let sql = `
+            INSERT INTO BASE_ATTACHMENT(recordid,videotitle,videopath, datecreated) VALUES ${videoparams}
+         `
+
+         Helper.executeQuery(sql)
+         .then(result => {
+            if(Images.length){
+                const images = [];
+                for(let i = 0; i < Images.length; i++){
+                    images.push(`(${recordid},'${Images[i].imagetitle}','${Images[i].imagepath}', NOW())`);
+                }
+                 imageparams = images.join()
+                 let sql = `
+                    INSERT INTO BASE_ATTACHMENT(recordid,imagetitle,imagepath, datecreated) VALUES ${imageparams}
+                 `
+        
+                 Helper.executeQuery(sql)
+                 .then(result => {
+                    return insertRecord(res,recordid,comment,userid,location,type)
+                 })
+                 .catch(error => {Helper.displayMessage(res,500,error)})
+            }
+            else{
+                return insertRecord(res,recordid,comment,userid,location,type)
+            }
+            
+         })
+         .catch(error => {Helper.displayMessage(res,500,error)})
+    }
+    else if (Images.length){
+        const images = [];
+        for(let i = 0; i < Images.length; i++){
+            images.push(`(${recordid},'${Images[i].imagetitle}','${Images[i].imagepath}', NOW())`);
+        }
+        imageparams = images.join();
+        let sql = `
+        INSERT INTO BASE_ATTACHMENT(recordid,imagetitle,imagepath, datecreated) VALUES ${imageparams}
+        `
+
+        Helper.executeQuery(sql)
+        .then(result => {
+        return insertRecord(res,recordid,comment,userid,location,type)
+        })
+        .catch(error => {Helper.displayMessage(res,500,error)})
     }
     else{
-        res.statusCode = 400;
-        res.setHeader('content-type', 'application/json');
-        res.json({
-            status: 400,
-            error: "request is undefined"
-        })
+        return insertRecord(res,recordid,comment,userid,location,type)
     }
+
 }
 
 export const updateLocation = (req, res) => {
@@ -251,45 +281,7 @@ const callServer = (res, sql, params) => {
                     message: `record not found`
                 })
             }
-            const { rows } = result;
-            const output = [];
-            for(let i = 0; i < rows.length; i++){
-                const {
-                    recordid,comment,status,location,createdby,
-                    createdon,type
-                } = rows[i];
-                let Videos = [];
-                let Images = [];
-                for(let k = 0; k < rows.length; k++){
-                    if(rows[k].recordid === recordid){
-                        const {imagetitle, videotitle,videopath,imagepath} = rows[k];
-                        if(videopath !== null){
-                            Videos.push({videopath,videotitle});
-                        }
-                        if(imagepath !== null){
-                            Images.push({imagepath,imagetitle});
-                        }
-                        
-                        
-                    }
-                }
-                
-                const array = output.filter(element => element.recordid === recordid )
-                if(!array.length){
-                    output.push({
-                        recordid,
-                        comment,
-                        status,
-                        location,
-                        createdby,
-                        createdon,
-                        type,
-                        Video:Videos,
-                        Image: Images
-                    })
-                }
-                
-            }
+           const output = groupAttachment(result)
             res.statusCode = 200;
             res.setHeader('content-type', 'application/json');
             return res.json({
@@ -363,4 +355,79 @@ const callServer = (res, sql, params) => {
     }
     
     
+}
+const groupAttachment = (result) => {
+    const { rows } = result;
+    const output = [];
+    for(let i = 0; i < rows.length; i++){
+        const {
+            recordid,comment,status,location,createdby,
+            createdon,type
+        } = rows[i];
+        let Videos = [];
+        let Images = [];
+        for(let k = 0; k < rows.length; k++){
+            if(rows[k].recordid === recordid){
+                const {imagetitle, videotitle,videopath,imagepath} = rows[k];
+                if(videopath !== null){
+                    Videos.push({videopath,videotitle});
+                }
+                if(imagepath !== null){
+                    Images.push({imagepath,imagetitle});
+                }
+                
+                
+            }
+        }
+        
+        const array = output.filter(element => element.recordid === recordid )
+        if(!array.length){
+            output.push({
+                recordid,
+                comment,
+                status,
+                location,
+                createdby,
+                createdon,
+                type,
+                Video:Videos,
+                Image: Images
+            })
+        }
+        
+    }
+    return output;
+}
+const insertRecord = (res, recordid, comment, userid, location, type) => {
+    const reportcategoryid = (type === RED_FLAG) ? 1 : 2
+    let sql = `
+        INSERT INTO BASE_REPORT(recordid,comment,createdby,status, location, reportcategoryid,type, createdon)
+        VALUES ($1, $2, $3, $4, $5, $6, $7,$8)
+    `
+    Helper.executeQuery(sql, [recordid, comment, userid, 'IN DRAFT',location, reportcategoryid, type, 'NOW()'])
+    .then(result => {
+        let sql = `
+        SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+        R.status,R.reportcategoryid, R.type,
+        R.createdon, A.attachmentid,A.videotitle,A.videopath,
+        A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+         where R.recordid = $1;
+        `
+        Helper.executeQuery(sql, [recordid])
+        .then((result) => {
+            const output = groupAttachment(result)
+            res.statusCode = 201;
+            res.setHeader('content-type', 'application/json');
+           return res.json({
+                status: 201,
+                data: [{
+                    recordid,
+                    message: 'Created Red-flag record',
+                    report: output
+                }]
+            })
+        })
+        .catch(error => Helper.displayMessage(res,500,error))
+    })
+    .catch(error => Helper.displayMessage(res,500,error))
 }
