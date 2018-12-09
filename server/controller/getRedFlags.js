@@ -3,12 +3,6 @@ import Helper from '../Helper';
 import {SUPER_ADMINISTRATOR, USER_ROLE, RED_FLAG} from '../types';
 
 export const getRedFlags = (req, res) => {
-    // res.statusCode = 200;
-    // res.setHeader('content-type', 'application/json');
-    // res.json({
-    //     status: 200,
-    //     data: records
-    // })
     if(req.token){
         const user = req.token;
         const {rolename, userid} = user;
@@ -18,7 +12,7 @@ export const getRedFlags = (req, res) => {
             R.status,R.reportcategoryid, R.type,
             R.createdon, A.attachmentid,A.videotitle,A.videopath,
             A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
-            WHERE R.type = $1`;
+            WHERE R.type = $1;`;
            return callServer(res,sql,[RED_FLAG])
 
         }
@@ -28,7 +22,7 @@ export const getRedFlags = (req, res) => {
             R.status,R.reportcategoryid, R.type,
             R.createdon, A.attachmentid,A.videotitle,A.videopath,
             A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
-             where R.type = $1 AND R.createdby = $2`;
+             where R.type = $1 AND R.createdby = $2;`;
            return  callServer(res,sql,[RED_FLAG, userid])
         }
     }
@@ -37,22 +31,6 @@ export const getRedFlags = (req, res) => {
 export const getARecord = (req,res) => {
     if(/^\d+$/.test(req.params.id)){
         const flagId = parseInt(req.params.id)
-        // const selectedRecord = records.filter(record => record.id === flagId);
-        // if(selectedRecord.length > 0){
-        //     res.statusCode = 200;
-        //     res.setHeader('content-type', 'application/json');
-        //     res.json({
-        //         status: 200,
-        //         report: selectedRecord
-        //     })
-        // }else{
-        //     res.statusCode = 404;
-        //     res.setHeader('content-type', 'application/json');
-        //     res.json({
-        //         status: 404,
-        //         message: `REQUEST ID NOT FOUND`
-        //     })
-        // }
         if(req.token){
             const {rolename, userid} = req.token;
             if(rolename === SUPER_ADMINISTRATOR){
@@ -60,8 +38,8 @@ export const getARecord = (req,res) => {
                 SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
                 R.status,R.reportcategoryid, R.type,
                 R.createdon, A.attachmentid,A.videotitle,A.videopath,
-                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
-                 where R.type = $1 AND R.recordid = $2
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where R.type = $1 AND R.recordid = $2;
                 `
                 return callServer(res,sql,[RED_FLAG, flagId])
             }
@@ -70,8 +48,8 @@ export const getARecord = (req,res) => {
                 SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
                 R.status,R.reportcategoryid, R.type,
                 R.createdon, A.attachmentid,A.videotitle,A.videopath,
-                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
-                 where (R.type = $1 AND R.recordid = $2) AND R.createdby = $3
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where (R.type = $1 AND R.recordid = $2) AND R.createdby = $3;
                 `
                 return callServer(res,sql,[RED_FLAG,flagId,userid])
             }
