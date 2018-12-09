@@ -73,7 +73,6 @@ describe('It should test all the end points', () => {
             })
         })
         it('response to have property data', (done) => {
-            console.log('res',res)
             chai.request(app).get('/api/v1/red-flags').type('form').set('authorization', token).end((err,res) => {
                 expect(res.body).to.have.property('data');
                 done();
