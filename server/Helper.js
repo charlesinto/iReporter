@@ -128,7 +128,6 @@ class Helper {
                     client.query(sql,params,(err,result)=>{
                         client.release();
                         if(err){
-                            console.log(err)
                             reject(err);
                         }else{
                             resolve(result)
@@ -139,7 +138,6 @@ class Helper {
                     client.query(sql,(err,result)=>{
                       client.release();
                         if(err){
-                            console.log(err)
                             reject(err);
                         }else{
                             resolve(result)
