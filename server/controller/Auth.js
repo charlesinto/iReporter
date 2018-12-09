@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import Helper from '../Helper';
+import {USER_ROLE} from '../types'
 
 export const signUpUser = (req,res) => {
     const account = Helper.trimWhiteSpace(req.body);
@@ -19,7 +20,7 @@ export const signUpUser = (req,res) => {
             let sql = `INSERT INTO BASE_USER(email,hashpassword,firstname,lastname,phonenumber,username,profile_pic_path,datecreated,roleid,rolename)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
             const hashpassword = bcrypt.hashSync(password,10);
-            Helper.executeQuery(sql,[email,hashpassword,firstname,lastname,phonenumber,username,profile_pic_path,'NOW()',1,'SUPER ADMINISTRATOR'])
+            Helper.executeQuery(sql,[email,hashpassword,firstname,lastname,phonenumber,username,profile_pic_path,'NOW()',2,USER_ROLE])
             .then((result) => {
                 let sql = 'SELECT * FROM BASE_USER where email = $1';
                 Helper.executeQuery(sql,[email])

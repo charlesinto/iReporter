@@ -5,62 +5,75 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcrypt';
 import Helper from '../Helper';
+import {newRecord, location, createuser, user, token} from '../model';
 const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-const newRecord = {
-    "createdOn":"23rd Dec, 2018",
-    "createdBy":342,
-    "type":"red-flag",
-    "location":"",
-    "status":"draft",
-    "Images": [],
-    "Videos":[],
-    "comment":"lina rocks"
-}
 
-const location = {
-    location: '6.4444,3.20000',
-    comment: 'baba i dey hail'
-}
-
-const createuser = {
-    "email":"onuorahchibuike@gmail.com",
- 	"firstname":"charles",
- 	"lastname":"onuorah",
- 	"phonenumber":"08163113450",
- 	"username":"charlesinto",
- 	"password": "3450"
-}
-const user = {
-    "email":"onuorahchibuike@gmail.com",
-    "password": "3450"
-}
 describe('It should test all the end points', () => {
     describe('it should get all red flag records',() => {
+        beforeEach(done => {
+            let sql = `CREATE TABLE IF NOT EXISTS BASE_REPORT(
+                ID SERIAL, recordid INTEGER NOT NULL, comment VARCHAR(250), createdby INTEGER NOT NULL,status VARCHAR(25), location VARCHAR(125),
+                reportcategoryid INTEGER NOT NULL,type VARCHAR(50), createdon timestamp 
+            );`
+            Helper.executeQuery(sql)
+            .then(result => {
+                let sql = `INSERT INTO BASE_REPORT(recordid,comment,createdby,status, location, reportcategoryid,type, createdon)
+                values (3400, 'heloo',1, 'in draf', '',1,'red-flag', now()),
+                (3401, 'heloo',1, 'RESOLBED', '',1,'red-flag', now()),
+                (3402, 'heloo',2, 'UNDER INVESTIGATIION', '',1,'red-flag', now());`
+                Helper.executeQuery(sql)
+                .then(result => {
+                    let sql = `CREATE TABLE IF NOT EXISTS BASE_ATTACHMENT(attachmentid SERIAL, recordid INTEGER NOT NULL,videotitle VARCHAR(50), 
+                    videopath VARCHAR(255),imagetitle  VARCHAR(50), imagepath VARCHAR(255), datecreated timestamp);`
+                    Helper.executeQuery(sql)
+                    .then(result => {
+                        let sql = `INSERT INTO BASE_ATTACHMENT(recordid, videotitle,videopath,imagetitle,imagepath, datecreated)
+                        VALUES (3400, 'heloo','','heAVE','', NOW()),
+                        (3400, 'heloo-1','','heAVE1','', NOW()),
+                        (3401, 'hi','','hi','', NOW());`
+                        Helper.executeQuery(sql)
+                        .then(result => done())
+                    })
+                })
+            })
+            .catch(err => done());
+        })
+        afterEach(done => {
+            let sql = `DROP TABLE IF EXITS BASE_REPORT;`;
+            Helper.executeQuery(sql)
+            .then(result => {
+                let sql = `DROP TABLE IF EXISTS BASE_ATTACHMENT;`;
+                Helper.executeQuery(sql)
+                .then(result => done())
+                .catch(error => done())
+            })
+            .catch(error => done())
+        })
         it('response should be an object', (done) => {
             chai.request(app).get('/api/v1/red-flags').type('form').set('content-type', 'application/json')
-            .end((err,res) => {
+            .set('authorization', token).end((err,res) => {
                 expect(res).to.be.an('object');
                 done();
             })
         })
         it('response to have property status', (done) => {
             chai.request(app).get('/api/v1/red-flags').type('form').set('content-type', 'application/json')
-            .end((err,res) => {
+            .set('authorization', token).end((err,res) => {
                 expect(res.body).to.have.property('status');
                 done();
             })
         })
         it('response to have property data', (done) => {
-            chai.request(app).get('/api/v1/red-flags').type('form').end((err,res) => {
+            chai.request(app).get('/api/v1/red-flags').type('form').set('authorization', token).end((err,res) => {
                 expect(res.body).to.have.property('data');
                 done();
             })
         })
         it('response should have a status of 200',(done)=>{
-            chai.request(app).get('/api/v1/red-flags').type('form')
+            chai.request(app).get('/api/v1/red-flags').set('authorization', token).type('form')
             .set('content-type', 'application/json').end((err,res) => {
                 
                 expect(res).to.have.status(200);
@@ -70,7 +83,7 @@ describe('It should test all the end points', () => {
        
         it('data should be an array', (done) => {
             chai.request(app).get('/api/v1/red-flags').type('form').set('content-type', 'application/json')
-            .end((err,res) => {
+            .set('authorization', token).end((err,res) => {
                 expect(res.body.data).to.be.an('array');
                 done();
             })
