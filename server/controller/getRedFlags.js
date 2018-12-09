@@ -37,21 +37,44 @@ export const getRedFlags = (req, res) => {
 export const getARecord = (req,res) => {
     if(/^\d+$/.test(req.params.id)){
         const flagId = parseInt(req.params.id)
-        const selectedRecord = records.filter(record => record.id === flagId);
-        if(selectedRecord.length > 0){
-            res.statusCode = 200;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 200,
-                report: selectedRecord
-            })
-        }else{
-            res.statusCode = 404;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 404,
-                message: `REQUEST ID NOT FOUND`
-            })
+        // const selectedRecord = records.filter(record => record.id === flagId);
+        // if(selectedRecord.length > 0){
+        //     res.statusCode = 200;
+        //     res.setHeader('content-type', 'application/json');
+        //     res.json({
+        //         status: 200,
+        //         report: selectedRecord
+        //     })
+        // }else{
+        //     res.statusCode = 404;
+        //     res.setHeader('content-type', 'application/json');
+        //     res.json({
+        //         status: 404,
+        //         message: `REQUEST ID NOT FOUND`
+        //     })
+        // }
+        if(req.token){
+            const {rolename, userid} = req.token;
+            if(rolename === SUPER_ADMINISTRATOR){
+                let sql = `
+                SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                R.status,R.reportcategoryid, R.type,
+                R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where R.type = $1 AND R.recordid = $2
+                `
+                return callServer(res,sql,[RED_FLAG, flagId])
+            }
+            else if (rolename === USER_ROLE){
+                let sql = `
+                SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                R.status,R.reportcategoryid, R.type,
+                R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT OUTER JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where (R.type = $1 AND R.recordid = $2) AND R.createdby = $3
+                `
+                return callServer(res,sql,[RED_FLAG,flagId,userid])
+            }
         }
         
     }else{
@@ -242,6 +265,14 @@ const callServer = (res, sql, params) => {
     if(typeof params.length !== 'undefined' && params.length > 0){
         Helper.executeQuery(sql,params)
         .then((result) => {
+            if(!result.rows.length){
+                res.statusCode = 404;
+                res.setHeader('content-type', 'application/json');
+                return res.json({
+                    status: 404,
+                    message: `record not found`
+                })
+            }
             const { rows } = result;
             const output = [];
             for(let i = 0; i < rows.length; i++){
@@ -294,6 +325,14 @@ const callServer = (res, sql, params) => {
     }else{
         Helper.executeQuery(sql)
         .then((result) => {
+            if(!result.rows.length){
+                res.statusCode = 404;
+                res.setHeader('content-type', 'application/json');
+                return res.json({
+                    status: 404,
+                    data: []
+                })
+            }
             const { rows } = result;
             const output = [];
             for(let i = 0; i < rows.length; i++){
@@ -333,11 +372,11 @@ const callServer = (res, sql, params) => {
                 }
                 
             }
-            res.statusCode = 200;
+            res.statusCode = 404;
             res.setHeader('content-type', 'application/json');
             return res.json({
-                status: 200,
-                data: output
+                status: 404,
+                message: `record not found`
             })
         })
         .catch((error) => {

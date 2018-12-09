@@ -5,7 +5,7 @@ import { getRedFlags, getARecord, postRecord, updateLocation, updateComment, del
 const router = express.Router();
 
 router.get('/', VerifyToken, getRedFlags);
-router.get('/:id', getARecord);
+router.get('/:id',VerifyToken, getARecord);
 router.post('/', postRecord);
 router.patch('/:id/location', updateLocation);
 router.patch('/:id/comment', updateComment);
