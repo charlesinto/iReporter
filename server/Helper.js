@@ -18,7 +18,7 @@ class Helper {
         if(typeof obj !== "undefined" && obj !== '' && typeof obj === 'object' && typeof obj.length === "undefined"){
            
             Object.keys(obj).forEach(function(key){ 
-                if(obj[key] !== null && typeof obj[key] !== "number"){
+                if(obj[key] !== null && typeof obj[key] !== "number" && !Array.isArray(obj[key])){
                     obj[key] = obj[key].trim()
                 }
              });

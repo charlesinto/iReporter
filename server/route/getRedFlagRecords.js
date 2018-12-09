@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', VerifyToken, getRedFlags);
 router.get('/:id',VerifyToken, getARecord);
-router.post('/', postRecord);
+router.post('/',VerifyToken, postRecord);
 router.patch('/:id/location', updateLocation);
 router.patch('/:id/comment', updateComment);
 router.delete('/:id', deleteRecord);
