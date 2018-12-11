@@ -28,6 +28,43 @@ export const getInterventionRecord = (req,res) => {
     }
 }
 
+export const getASingleRecord = (req,res) => {
+    if(/^\d+$/.test(req.params.id)){
+        const flagId = parseInt(req.params.id)
+        if(req.token){
+            const {rolename, userid} = req.token;
+            if(rolename === SUPER_ADMINISTRATOR){
+                let sql = `
+                SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                R.status,R.reportcategoryid, R.type,
+                R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where R.type = $1 AND R.recordid = $2;
+                `
+                return callServer(res,sql,[INTERVENTION, flagId])
+            }
+            else if (rolename === USER_ROLE){
+                let sql = `
+                SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                R.status,R.reportcategoryid, R.type,
+                R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                 where (R.type = $1 AND R.recordid = $2) AND R.createdby = $3;
+                `
+                return callServer(res,sql,[INTERVENTION,flagId,userid])
+            }
+        }
+        
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        res.json({
+            status: 400,
+            error: "Invalid request id"
+        })
+    }
+}
+
 const callServer = (res, sql, params) => {
     if(typeof params.length !== 'undefined' && params.length > 0){
         Helper.executeQuery(sql,params)
@@ -157,3 +194,4 @@ const groupAttachment = (result) => {
     }
     return output;
 }
+
