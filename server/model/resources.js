@@ -77,6 +77,17 @@ export const newRecord = {
     "comment":"lina rocks"
 }
 
+export const newRecord1 = {
+    "createdOn":"23rd Dec, 2018",
+    "createdBy":342,
+    "type":"intervention",
+    "location":"",
+    "status":"IN DRAFT",
+    "Images": [],
+    "Videos":[],
+    "comment":"lina rocks"
+}
+
 export const createuser = {
     "email":"onuorahchibuike@gmail.com",
  	"firstname":"charles",

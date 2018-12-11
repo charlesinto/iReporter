@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcrypt';
 import Helper from '../Helper';
-import {newRecord, location, createuser, user, token} from '../model';
+import {newRecord,newRecord1, location, createuser, user, token} from '../model';
 const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -733,5 +733,74 @@ describe('It should test all the end points', () => {
                 done();
             })
         })
+    })
+    describe('it should post red flag records',() => {
+        beforeEach(done => {
+            let sql = `CREATE TABLE IF NOT EXISTS BASE_REPORT(
+                ID SERIAL, recordid INTEGER NOT NULL, comment VARCHAR(250), createdby INTEGER NOT NULL,status VARCHAR(25), location VARCHAR(125),
+                reportcategoryid INTEGER NOT NULL,type VARCHAR(50), createdon timestamp 
+            );`
+            Helper.executeQuery(sql)
+            .then(result => {
+                let sql = `CREATE TABLE IF NOT EXISTS BASE_ATTACHMENT (attachmentid SERIAL, recordid INTEGER NOT NULL,videotitle VARCHAR(50), 
+                videopath VARCHAR(255),imagetitle  VARCHAR(50), imagepath VARCHAR(255), datecreated timestamp);`
+                Helper.executeQuery(sql)
+                .then(result => {
+                    done();
+                })
+                .catch(err => {console.log(err); done()})
+                
+            })
+            .catch(err => {console.log(err); done()});
+        })
+        afterEach(done => {
+            let sql = `DROP TABLE IF EXITS BASE_REPORT CASCADE`;
+            Helper.executeQuery(sql)
+            .then(result => {
+                let sql = `DROP TABLE IF EXISTS BASE_ATTACHMENT CASCADE`;
+                Helper.executeQuery(sql)
+                .then(result => done())
+                .catch(error => done())
+            })
+            .catch(error => done())
+        })
+        it('response should be an object', (done) => {
+            chai.request(app).post('/api/v1/interventions').type('form').set('content-type', 'application/json')
+            .set('authorization', token).send(newRecord1).end((err,res) => {
+                expect(res).to.be.an('object');
+                done();
+            })
+        })
+        it('response to have property status', (done) => {
+            chai.request(app).post('/api/v1/interventions').type('form').set('content-type', 'application/json')
+            .set('authorization', token).send(newRecord1).end((err,res) => {
+                expect(res.body).to.have.property('status');
+                done();
+            })
+        })
+        it('response to have property data', (done) => {
+            chai.request(app).post('/api/v1/interventions').type('form').set('content-type', 'application/json')
+            .set('authorization', token).send(newRecord1).end((err,res) => {
+                expect(res.body).to.have.property('data');
+                done();
+            })
+        })
+        it('response should have a status of 201',(done)=>{
+            chai.request(app).post('/api/v1/interventions').type('form').set('content-type', 'application/json')
+            .set('authorization', token).send(newRecord1).end((err,res) => {
+                
+                expect(res).to.have.status(201);
+                done();
+            })
+        })
+       
+        it('data should be an array', (done) => {
+            chai.request(app).post('/api/v1/interventions').type('form').set('content-type', 'application/json')
+            .set('authorization', token).send(newRecord1).end((err,res) => {
+                expect(res.body.data).to.be.an('array');
+                done();
+            })
+        })
+        
     })
 })
