@@ -284,7 +284,7 @@ const insertRecord = (res, recordid, comment, userid, location, type) => {
                 status: 201,
                 data: [{
                     recordid,
-                    message: 'Created Red-flag record',
+                    message: 'Created intervention record',
                     report: output
                 }]
             })
