@@ -130,6 +130,60 @@ export const createNewRecord = (req,res) => {
         return insertRecord(res,recordid,comment,userid,location,type)
     }
 }
+
+export const updateInterventionComment = (req,res ) => {
+    let flagRecord = Helper.trimWhiteSpace(req.body);
+    const {userid} = req.token;
+    if(!Helper.validateKey(flagRecord,['comment'])){
+        return Helper.displayMessage(res,400,'comment is required')
+    }
+    if(/^\d+$/.test(req.params.id)){
+        const { comment } = flagRecord;
+        const requestId = parseInt(req.params.id)
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2 AND type = $3`;
+        Helper.executeQuery(sql,[requestId, userid, INTERVENTION])
+        .then(result => {
+            if(result.rows.length){
+                if(result.rows[0].status === IN_DRAFT){
+                    let sql = `
+                        UPDATE BASE_REPORT SET comment = $1 WHERE recordid = $2 AND type = $3
+                    `
+                    Helper.executeQuery(sql,[comment, requestId, INTERVENTION])
+                    .then(result => {
+                        let sql = `
+                            SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                            R.status,R.reportcategoryid, R.type,
+                            R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                            A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                            WHERE R.recordid = $1;
+                        `
+                        return callServer(res,sql,[requestId]);
+                    })
+                    .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                    })
+                }else{
+
+                    return Helper.displayMessage(res,406, `can not perform action`)
+                }
+                
+            }else{
+               return Helper.displayMessage(res,404,'record not found')
+            }
+        })
+        .catch(error => Helper.displayMessage(res,500, error))
+        
+        
+        
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        return res.json({
+            status: 400,
+            error: "Invalid request"
+        })
+    }
+}
 const callServer = (res, sql, params) => {
     if(typeof params.length !== 'undefined' && params.length > 0){
         Helper.executeQuery(sql,params)
