@@ -146,8 +146,6 @@ export const updateLocation = (req, res) => {
         Helper.executeQuery(sql,[requestId, userid])
         .then(result => {
             if(result.rows.length){
-                console.log('row', result.rows[0])
-                console.log('here in drafyt', IN_DRAFT, 'not here', result.rows[0].status)
                 if(result.rows[0].status === IN_DRAFT){
                     let sql = `
                         UPDATE BASE_REPORT SET location = $1 WHERE recordid = $2
@@ -192,49 +190,53 @@ export const updateLocation = (req, res) => {
 }
 
 export const updateComment = (req,res) => {
-    let flagRecord = req.body;
-    if((typeof flagRecord !== 'undefined' && typeof flagRecord.comment !== 'undefined') && flagRecord.comment !== ' ' ){
-        if(/^\d+$/.test(req.params.id)){
-            const requestId = parseInt(req.params.id)
-            const recordRequested = records.filter(item => item.id === requestId);
-            let data = {};
-            if(recordRequested.length > 0){
-                records.forEach(record => {
-                    if(record.id === requestId){
-                        record.comment = flagRecord.comment;
-                        data = record;
-                    }
-                })
-                res.statusCode = 202;
-                res.setHeader('content-type', 'application/json');
-                res.json({
-                    status: 202,
-                    data: [{
-                        requestId,
-                        message: 'Updated Red-flag\'s record comment',
-                        report: data
-                    }]
-                })
+    let flagRecord = Helper.trimWhiteSpace(req.body);
+    const {userid} = req.token;
+    if(!Helper.validateKey(flagRecord,['comment'])){
+        return Helper.displayMessage(res,400,'comment is required')
+    }
+    if(/^\d+$/.test(req.params.id)){
+        const { comment } = flagRecord;
+        const requestId = parseInt(req.params.id)
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2`;
+        Helper.executeQuery(sql,[requestId, userid])
+        .then(result => {
+            if(result.rows.length){
+                if(result.rows[0].status === IN_DRAFT){
+                    let sql = `
+                        UPDATE BASE_REPORT SET comment = $1 WHERE recordid = $2
+                    `
+                    Helper.executeQuery(sql,[comment, requestId])
+                    .then(result => {
+                        let sql = `
+                            SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
+                            R.status,R.reportcategoryid, R.type,
+                            R.createdon, A.attachmentid,A.videotitle,A.videopath,
+                            A.imagetitle,A.imagepath FROM BASE_REPORT R LEFT JOIN BASE_ATTACHMENT A ON R.recordid = A.recordid
+                            WHERE R.recordid = $1;
+                        `
+                        return callServer(res,sql,[requestId]);
+                    })
+                    .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                    })
+                }else{
+
+                    return Helper.displayMessage(res,406, `can not perform action`)
+                }
+                
             }else{
-                res.statusCode = 404;
-                res.setHeader('content-type', 'application/json');
-                res.json({
-                    status: 404,
-                    error: "Record not found"
-                })
+               return Helper.displayMessage(res,404,'record not found')
             }
-        }else{
-            res.statusCode = 400;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 400,
-                error: "Invalid Id"
-            })
-        }
+        })
+        .catch(error => Helper.displayMessage(res,500, error))
+        
+        
+        
     }else{
         res.statusCode = 400;
         res.setHeader('content-type', 'application/json');
-        res.json({
+        return res.json({
             status: 400,
             error: "Invalid request"
         })
