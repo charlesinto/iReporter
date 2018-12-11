@@ -146,6 +146,8 @@ export const updateLocation = (req, res) => {
         Helper.executeQuery(sql,[requestId, userid])
         .then(result => {
             if(result.rows.length){
+                console.log('row', result.rows[0])
+                console.log('here in drafyt', IN_DRAFT, 'not here', result.rows[0].status)
                 if(result.rows[0].status === IN_DRAFT){
                     let sql = `
                         UPDATE BASE_REPORT SET location = $1 WHERE recordid = $2

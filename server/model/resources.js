@@ -71,7 +71,7 @@ export const newRecord = {
     "createdBy":342,
     "type":"red-flag",
     "location":"",
-    "status":"draft",
+    "status":"IN DRAFT",
     "Images": [],
     "Videos":[],
     "comment":"lina rocks"
