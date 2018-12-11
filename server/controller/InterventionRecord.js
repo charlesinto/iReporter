@@ -264,7 +264,7 @@ export const deleteInterventionRecord= (req,res) => {
                                 status: 200,
                                 data: [{
                                     requestId,
-                                    message: 'red flag record has been deleted'
+                                    message: 'intervention record has been deleted'
                                 }]
                             })
                         })
