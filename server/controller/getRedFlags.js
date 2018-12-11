@@ -142,15 +142,15 @@ export const updateLocation = (req, res) => {
     if(/^\d+$/.test(req.params.id)){
         const { location } = flagRecord;
         const requestId = parseInt(req.params.id)
-        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2`;
-        Helper.executeQuery(sql,[requestId, userid])
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2 AND type = $3`;
+        Helper.executeQuery(sql,[requestId, userid, RED_FLAG])
         .then(result => {
             if(result.rows.length){
                 if(result.rows[0].status === IN_DRAFT){
                     let sql = `
-                        UPDATE BASE_REPORT SET location = $1 WHERE recordid = $2
+                        UPDATE BASE_REPORT SET location = $1 WHERE recordid = $2 AND type = $3
                     `
-                    Helper.executeQuery(sql,[location, requestId])
+                    Helper.executeQuery(sql,[location, requestId, RED_FLAG])
                     .then(result => {
                         let sql = `
                             SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
@@ -198,15 +198,15 @@ export const updateComment = (req,res) => {
     if(/^\d+$/.test(req.params.id)){
         const { comment } = flagRecord;
         const requestId = parseInt(req.params.id)
-        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2`;
-        Helper.executeQuery(sql,[requestId, userid])
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2 AND type = $3`;
+        Helper.executeQuery(sql,[requestId, userid, RED_FLAG])
         .then(result => {
             if(result.rows.length){
                 if(result.rows[0].status === IN_DRAFT){
                     let sql = `
-                        UPDATE BASE_REPORT SET comment = $1 WHERE recordid = $2
+                        UPDATE BASE_REPORT SET comment = $1 WHERE recordid = $2 AND type = $3
                     `
-                    Helper.executeQuery(sql,[comment, requestId])
+                    Helper.executeQuery(sql,[comment, requestId, RED_FLAG])
                     .then(result => {
                         let sql = `
                             SELECT R.id,R.recordid,R.comment,R.createdby,R.location,
@@ -244,37 +244,60 @@ export const updateComment = (req,res) => {
 }
 
 export const deleteRecord = (req,res) => {
+    const flagRecord = Helper.trimWhiteSpace(req.body);
+    const {userid} = req.token;
     if(/^\d+$/.test(req.params.id)){
-        const requestId = parseInt(req.params.id);
-        let itemPos = -1;
-        const recordRequested = records.filter((item, pos) => {if(item.id === requestId){itemPos = pos;return true}});
-        if(recordRequested.length > 0){
-            records.splice(itemPos, 1);
-            res.statusCode = 200;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 200,
-                data: [{
-                    requestId,
-                    message: 'red flag record has been deleted'
-                }]
-            })
-        }else{
-            res.statusCode = 404;
-            res.setHeader('content-type', 'application/json');
-            res.json({
-                status: 404,
-                error: "Record not found"
-            })
-        }
+        const { comment } = flagRecord;
+        const requestId = parseInt(req.params.id)
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2 AND type = $3`;
+        Helper.executeQuery(sql,[requestId, userid, RED_FLAG])
+        .then(result => {
+            if(result.rows.length){
+                if(result.rows[0].status === IN_DRAFT){
+                    let sql = `
+                        DELETE FROM BASE_REPORT WHERE recordid = $1 AND type = $2;
+                    `
+                    Helper.executeQuery(sql,[requestId, RED_FLAG])
+                    .then(result => {
+                        let sql = `DELETE FROM BASE_ATTACHMENT where recordid = $1 `;
+                        Helper.executeQuery(sql,[requestId])
+                        .then(result => {
+                            res.statusCode = 200;
+                            res.setHeader('content-type', 'application/json');
+                            res.json({
+                                status: 200,
+                                data: [{
+                                    requestId,
+                                    message: 'red flag record has been deleted'
+                                }]
+                            })
+                        })
+                        .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                        })
+                    })
+                    .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                    })
+                }else{
+
+                    return Helper.displayMessage(res,406, `can not perform action`)
+                }
+                
+            }else{
+               return Helper.displayMessage(res,404,'record not found')
+            }
+        })
+        .catch(error => Helper.displayMessage(res,500, error))
     }else{
         res.statusCode = 400;
         res.setHeader('content-type', 'application/json');
-        res.json({
+        return res.json({
             status: 400,
-            error: "Invalid Id"
+            error: "Invalid request"
         })
     }
+
 }
 
 
