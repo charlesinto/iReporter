@@ -803,4 +803,74 @@ describe('It should test all the end points', () => {
         })
         
     })
+    describe('it should patch a red flag comment',() => {
+        beforeEach(done => {
+           let sql = `DROP TABLE IF EXISTS BASE_REPORT CASCADE;`;
+           Helper.executeQuery(sql)
+           .then(result => {
+               let sql = `CREATE TABLE IF NOT EXISTS BASE_REPORT(
+                   ID SERIAL, recordid INTEGER NOT NULL, comment VARCHAR(250), createdby INTEGER NOT NULL,status VARCHAR(25), location VARCHAR(125),
+                   reportcategoryid INTEGER NOT NULL,type VARCHAR(50), createdon timestamp 
+               );`
+               Helper.executeQuery(sql)
+               .then(result => {
+                   let sql = `INSERT INTO BASE_REPORT(recordid,comment,createdby,status, location, reportcategoryid,type, createdon)
+                   values (3401, 'heloo',1, 'IN DRAFT', '',1,'intervention', now())`
+                   Helper.executeQuery(sql)
+                   .then(result => {
+                       return done();
+                   })
+                   .catch(err => {console.log('eroor', err); done()})
+                   
+               })
+               .catch(err => {console.log('error-1', err); done()});
+           })
+           .catch(error => done())
+           
+       })
+       afterEach(done => {
+           let sql = `DROP TABLE IF EXISTS BASE_REPORT CASCADE;`;
+           Helper.executeQuery(sql)
+           .then(result => done())
+           .catch(error => done())
+       })
+       it('response should be an object', (done) => {
+           chai.request(app).patch('/api/v1/interventions/3401/comment').type('form').set('content-type', 'application/json')
+           .set('authorization', token).send(location).end((err,res) => {
+               expect(res).to.be.an('object');
+               done();
+           })
+       })
+       it('response to have property status', (done) => {
+           chai.request(app).patch('/api/v1/interventions/3401/comment').type('form').set('content-type', 'application/json')
+           .set('authorization', token).send(location).end((err,res) => {
+               expect(res.body).to.have.property('status');
+               done();
+           })
+       })
+       it('response to have property data', (done) => {
+           chai.request(app).patch('/api/v1/interventions/3401/comment').type('form').set('content-type', 'application/json')
+           .set('authorization', token).send(location).end((err,res) => {
+               expect(res.body).to.have.property('data');
+               done();
+           })
+       })
+       it('response should have a status of 200',(done)=>{
+           chai.request(app).patch('/api/v1/interventions/3401/comment').type('form').set('content-type', 'application/json')
+           .set('authorization', token).send(location).end((err,res) => {
+               
+               expect(res).to.have.status(200);
+               done();
+           })
+       })
+      
+       it('data should be an array', (done) => {
+           chai.request(app).patch('/api/v1/interventions/3401/comment').type('form').set('content-type', 'application/json')
+           .set('authorization', token).send(location).end((err,res) => {
+               expect(res.body.data).to.be.an('array');
+               done();
+           })
+       })
+       
+   })
 })
