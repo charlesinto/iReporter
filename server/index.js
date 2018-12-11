@@ -6,6 +6,7 @@ import path from 'path';
 import routes from './route';
 import authRoute from './route/authRoute';
 import getRedFlagRecords from './route/getRedFlagRecords';
+import interventionRecord from './route/interventionRecord';
 require('dotenv').config();
 
 const apiVersion = express.Router();
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/v1/red-flags', getRedFlagRecords);
+app.use('/api/v1/interventions', interventionRecord);
 app.use('/api/v1/auth', authRoute);
 
 let port = process.env.PORT || 5000;
