@@ -294,6 +294,66 @@ export const deleteInterventionRecord= (req,res) => {
         })
     }
 }
+
+export const updateInterventionStatus = (req,res) => {
+    if( req.token){
+        const update = Helper.trimWhiteSpace(req.body);
+        const { userid, rolename } = req.token;
+        if(rolename === SUPER_ADMINISTRATOR){
+            if(!Helper.validateKey(update, ['status'])){
+                return Helper.displayMessage(res,400,'status is required');
+            }
+            if(/^\d+$/.test(req.params.id)){
+                const { status } = update;
+                const requestId = parseInt(req.params.id)
+                let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND type = $2`;
+                Helper.executeQuery(sql,[requestId, INTERVENTION])
+                .then(result => {
+                    if(result.rows.length){
+                        let sql = `
+                            UPDATE BASE_REPORT SET status = $1 WHERE recordid = $2 AND type = $3
+                        `
+                        Helper.executeQuery(sql,[status, requestId, INTERVENTION])
+                        .then(result => {
+                            res.statusCode = 200;
+                            res.setHeader('content-type', 'application/json');
+                            return res.json({
+                                status: 200,
+                                data: [
+                                    {
+                                        id: requestId,
+                                        message: 'Updated Intervention record status'
+                                    }
+                                ]
+                            })
+                        })
+                        .catch(error => {
+                            return Helper.displayMessage(res,500, error)
+                        })    
+                    }else{
+                       return Helper.displayMessage(res,404,'record not found')
+                    }
+                })
+                .catch(error => Helper.displayMessage(res,500, error));    
+            }else{
+                res.statusCode = 400;
+                res.setHeader('content-type', 'application/json');
+                return res.json({
+                    status: 400,
+                    error: "Invalid request"
+                })
+            }
+        }
+        else{
+            res.statusCode = 403;
+            res.setHeader('content-type', 'application/json');
+            return res.json({
+                status: 403,
+                error: "Can not perform action, please contact administrator"
+            })
+        }
+    }
+}
 const callServer = (res, sql, params) => {
     if(typeof params.length !== 'undefined' && params.length > 0){
         Helper.executeQuery(sql,params)
