@@ -108,3 +108,7 @@ export const user = {
 }
 
 export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImVtYWlsIjoib251b3JhaGNoaWJ1aWtlQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiY2hhcmxlc2ludG8iLCJyb2xlaWQiOjEsInJvbGVuYW1lIjoiU1VQRVIgQURNSU5JU1RSQVRPUiIsImlhdCI6MTU0NDI5OTgwNSwiZXhwIjoxNTQ0OTA0NjA1fQ.TvLkKhngy62_eSs6_cnkqLtN1YtyFty7pXLCoDP2QJE';
+
+export const update = {
+    status: "Under Investigation"
+}
