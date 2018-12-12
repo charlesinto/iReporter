@@ -1,7 +1,7 @@
 window.onload = function(){
     setUpEvents();
 }
-//login login-form
+
 const setUpEvents = () => {
     document.getElementById('login').addEventListener('click', () => {
         window.location = window.origin + '/pages/user_home.html'
@@ -12,8 +12,6 @@ const setUpEvents = () => {
         e.stopPropagation();
         e.target.classList.toggle('active');
         document.getElementsByClassName('login-form')[0].style.display = 'none';
-       // document.getElementsByClassName('login')[0].style.background = "none";
-    //    document.getElementsByClassName('login')[0].classList.toggle('active');
        document.getElementsByClassName('login')[0].classList.toggle('active');
         e.target.style.background = '#fff';
         document.getElementsByClassName('signup-form')[0].style.display="block";
@@ -23,8 +21,6 @@ const setUpEvents = () => {
         e.stopPropagation();
         e.target.classList.toggle('active');
         document.getElementsByClassName('signup-form')[0].style.display = 'none';
-        // document.getElementsByClassName('signup')[0].style.background = "none";
-        // document.getElementsByClassName('login')[0].classList.toggle('active');
         document.getElementsByClassName('signup')[0].classList.toggle('active');
         e.target.style.background = '#fff';
         document.getElementsByClassName('login-form')[0].style.display="block";

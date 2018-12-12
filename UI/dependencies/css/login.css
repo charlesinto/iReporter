@@ -51,18 +51,15 @@ a {
     padding: 0;
     font-size: 150%;
     vertical-align: baseline;
-    /* background: transparent; */
     color: #0e42da;
 }
 
-/* change colours to suit your needs */
 ins {
     background-color:#ff9;
     color:#000;
     text-decoration:none;
 }
 
-/* change colours to suit your needs */
 mark {
     background-color:#ff9;
     color:#000; 
@@ -84,7 +81,6 @@ table {
     border-spacing:0;
 }
 
-/* change border colour to suit your needs */
 hr {
     display:block;
     height:1px;
@@ -115,9 +111,8 @@ input, select {
   .container{
     max-width: 500px;
     width: 90%;
-    margin: 60px auto;
+    margin: 70px auto;
     position: relative;
-    /* top: calc(50% - 300px); */
   }
 
   .active{
@@ -133,7 +128,6 @@ input, select {
   .signup,
   .login{
     width: 50%;
-    /* background: #fff; */
     background: #111 !important;
     opacity: 0.8;
     float: left;
@@ -147,7 +141,6 @@ input, select {
   
   .signup-form,
   .login-form{
-    /* background: #fff; */
     padding: 40px;
     background: #111 !important;
     clear: both;
@@ -182,9 +175,7 @@ input, select {
   input {
       color: #111 !important;
   }
-  /* input:focus{
-      border: 5px solid #111 !important;
-  } */
+  
   .btn{
     width: 100%;
     background: #34b3a0;
@@ -202,38 +193,39 @@ input, select {
 
   div.wrapper{
     display: flex !important;
-    flex: 4 !important;
-    overflow: auto;
+    height: 100vh;
     background: url(/dependencies/asset/banner.jpg) !important;
     padding: 0 !important;
     margin-top: 0 !important;
+    min-height: fit-content;
+    overflow:auto;
+    padding-bottom: 30px;
+    min-height: fit-content;
   }
   
   span a{
     text-decoration: none;
-    /* color: #000; */
   }
   
-  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  ::-webkit-input-placeholder { 
     color: #3e3e40;
     font-family: roboto;
   }
-  ::-moz-placeholder { /* Firefox 19+ */
+  ::-moz-placeholder {
     color: #3e3e40;
     font-family: roboto;
   }
-  :-ms-input-placeholder { /* IE 10+ */
+  :-ms-input-placeholder { 
     color: #3e3e40;
     font-family: roboto;
   }
-  :-moz-placeholder { /* Firefox 18- */
+  :-moz-placeholder { 
     color: #3e3e40;
     font-family: roboto;
   }
 
 #footer {
     padding: 0 !important;
-    /* padding: 4rem 0 2rem 0 !important; */
 }
 
 label#bb{
@@ -241,7 +233,6 @@ label#bb{
     margin-top: 10px;
     background: #5c4caf;
     display: table;
-    /* color: #000000bd !important; */
     cursor: pointer;
     color: #fff;
 }
@@ -253,8 +244,6 @@ label.info{
     align-self: flex-start;
 }
 div.body{
-    display: flex;
-    flex-direction: column;
     flex: 1;
     height: 100%;
 }
