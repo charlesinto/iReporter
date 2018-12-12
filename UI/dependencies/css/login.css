@@ -47,11 +47,12 @@ q:before, q:after {
 }
 
 a {
-    margin:0;
-    padding:0;
-    font-size:100%;
-    vertical-align:baseline;
-    background:transparent;
+    margin: 0;
+    padding: 0;
+    font-size: 150%;
+    vertical-align: baseline;
+    /* background: transparent; */
+    color: #0e42da;
 }
 
 /* change colours to suit your needs */
@@ -114,9 +115,13 @@ input, select {
   .container{
     max-width: 500px;
     width: 90%;
-    margin: 10px auto;
+    margin: 60px auto;
     position: relative;
     /* top: calc(50% - 300px); */
+  }
+
+  .active{
+    border: 2px solid #39468a;
   }
 
   .wrapper{
@@ -128,9 +133,12 @@ input, select {
   .signup,
   .login{
     width: 50%;
-    background: #fff;
+    /* background: #fff; */
+    background: #111 !important;
+    opacity: 0.8;
     float: left;
     height: 60px;
+    color: #fff;
     line-height: 60px;
     text-align: center;
     cursor: pointer;
@@ -139,9 +147,11 @@ input, select {
   
   .signup-form,
   .login-form{
-    background: #fff;
+    /* background: #fff; */
     padding: 40px;
+    background: #111 !important;
     clear: both;
+    opacity: 0.8;
     width: 100%;
     box-sizing: border-box;
     height: fit-content;
@@ -156,7 +166,9 @@ input, select {
     box-sizing: border-box;
     margin-bottom: 25px;
     border: 2px solid #e9eaea;
-    color: #3e3e40;
+    
+    color: #fff !important;
+    font-size: 120%  !important;
     font-size: 14px;
     outline: none;
     transform: all 0.5s ease;
@@ -187,10 +199,19 @@ input, select {
     cursor: pointer;
     margin-bottom: 30px;
   }
+
+  div.wrapper{
+    display: flex !important;
+    flex: 4 !important;
+    overflow: auto;
+    background: url(/dependencies/asset/banner.jpg) !important;
+    padding: 0 !important;
+    margin-top: 0 !important;
+  }
   
   span a{
     text-decoration: none;
-    color: #000;
+    /* color: #000; */
   }
   
   ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -211,7 +232,8 @@ input, select {
   }
 
 #footer {
-    padding: 4rem 0 2rem 0 !important;
+    padding: 0 !important;
+    /* padding: 4rem 0 2rem 0 !important; */
 }
 
 label#bb{
@@ -230,9 +252,18 @@ label.info{
     font-weight: 600;
     align-self: flex-start;
 }
-
+div.body{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+}
 
 
 input[type="file"] {
     display: none;
+}
+
+ul.plain{
+    margin-top: 10px;
 }
