@@ -327,7 +327,7 @@ export const updateRedFlagStatus = (req, res) => {
                                 data: [
                                     {
                                         id: requestId,
-                                        message: 'Updated Intervention record status'
+                                        message: 'Updated Red Flag record status'
                                     }
                                 ]
                             })

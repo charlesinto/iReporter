@@ -1230,7 +1230,7 @@ describe('It should test all the end points', () => {
             chai.request(app).patch('/api/v1/red-flags/3401/status').type('form')
             .set('authorization',token).set('content-type', 'application/json')
             .send(update).end((err,res) => {
-                expect(res.body.data[0].message).to.equal('Updated Intervention record status');
+                expect(res.body.data[0].message).to.equal('Updated Red Flag record status');
                 done();
             })
         })
