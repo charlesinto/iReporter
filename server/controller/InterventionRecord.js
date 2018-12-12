@@ -238,6 +238,62 @@ export const updateInterventionLocation = (req,res) => {
         })
     }
 }
+
+export const deleteInterventionRecord= (req,res) => {
+    const flagRecord = Helper.trimWhiteSpace(req.body);
+    const {userid} = req.token;
+    if(/^\d+$/.test(req.params.id)){
+        const { comment } = flagRecord;
+        const requestId = parseInt(req.params.id)
+        let sql =   `SELECT * FROM BASE_REPORT WHERE recordid = $1 AND createdby = $2 AND type = $3`;
+        Helper.executeQuery(sql,[requestId, userid, INTERVENTION])
+        .then(result => {
+            if(result.rows.length){
+                if(result.rows[0].status === IN_DRAFT){
+                    let sql = `
+                        DELETE FROM BASE_REPORT WHERE recordid = $1 AND type = $2;
+                    `
+                    Helper.executeQuery(sql,[requestId, INTERVENTION])
+                    .then(result => {
+                        let sql = `DELETE FROM BASE_ATTACHMENT where recordid = $1 `;
+                        Helper.executeQuery(sql,[requestId])
+                        .then(result => {
+                            res.statusCode = 200;
+                            res.setHeader('content-type', 'application/json');
+                            res.json({
+                                status: 200,
+                                data: [{
+                                    requestId,
+                                    message: 'intervention record has been deleted'
+                                }]
+                            })
+                        })
+                        .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                        })
+                    })
+                    .catch(error => {
+                        return Helper.displayMessage(res,500, error)
+                    })
+                }else{
+
+                    return Helper.displayMessage(res,406, `can not perform action`)
+                }
+                
+            }else{
+               return Helper.displayMessage(res,404,'record not found')
+            }
+        })
+        .catch(error => Helper.displayMessage(res,500, error))
+    }else{
+        res.statusCode = 400;
+        res.setHeader('content-type', 'application/json');
+        return res.json({
+            status: 400,
+            error: "Invalid request"
+        })
+    }
+}
 const callServer = (res, sql, params) => {
     if(typeof params.length !== 'undefined' && params.length > 0){
         Helper.executeQuery(sql,params)

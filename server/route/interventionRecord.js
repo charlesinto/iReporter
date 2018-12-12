@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { VerifyToken } from '../middleware'
 import { 
-    getInterventionRecord, getASingleRecord, createNewRecord, updateInterventionComment, updateInterventionLocation
+    getInterventionRecord, getASingleRecord, createNewRecord, updateInterventionComment, updateInterventionLocation, deleteInterventionRecord
 
 } from '../controller';
 const router = express.Router();
@@ -12,5 +12,5 @@ router.get('/:id', VerifyToken, getASingleRecord);
 router.post('/', VerifyToken, createNewRecord);
 router.patch('/:id/comment', VerifyToken, updateInterventionComment);
 router.patch('/:id/location', VerifyToken, updateInterventionLocation);
-
+router.delete('/:id', VerifyToken, deleteInterventionRecord)
 export default router; 
