@@ -303,7 +303,7 @@ export const deleteRecord = (req,res) => {
 export const updateRedFlagStatus = (req, res) => {
     if( req.token){
         const update = Helper.trimWhiteSpace(req.body);
-        const { userid, rolename } = req.token;
+        const { userid, rolename, email } = req.token;
         if(rolename === SUPER_ADMINISTRATOR){
             if(!Helper.validateKey(update, ['status'])){
                 return Helper.displayMessage(res,400,'status is required');
@@ -320,17 +320,21 @@ export const updateRedFlagStatus = (req, res) => {
                         `
                         Helper.executeQuery(sql,[status, requestId, RED_FLAG])
                         .then(result => {
-                            res.statusCode = 200;
-                            res.setHeader('content-type', 'application/json');
-                            return res.json({
-                                status: 200,
-                                data: [
-                                    {
-                                        id: requestId,
-                                        message: 'Updated Red Flag record status'
-                                    }
-                                ]
+                            Helper.sendMail(email, `Red-flag #${requestId} Status Updated to ${status}`)
+                            .then(info => {
+                                res.statusCode = 200;
+                                res.setHeader('content-type', 'application/json');
+                                return res.json({
+                                    status: 200,
+                                    data: [
+                                        {
+                                            id: requestId,
+                                            message: 'Updated Red Flag record status'
+                                        }
+                                    ]
+                                })
                             })
+                            .catch(error => Helper.displayMessage(res,500,'couldn\'t send email', error))
                         })
                         .catch(error => {
                             return Helper.displayMessage(res,500, error)
