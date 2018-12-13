@@ -1,6 +1,8 @@
 import Validator from 'validator';
 import pool from './DatabaseConnection';
 import jwt from 'jsonwebtoken';
+import nodemailer from  'nodemailer';
+
 /*
 *@ helper functions
 * @trimeWhiteSpace given an object, it removes the whitespaces in the values of the object
@@ -181,6 +183,32 @@ class Helper {
         res.statusCode = statusCode;
         res.setHeader('content-type', 'application/json');
         return res.json({message});
+    }
+
+    sendMail(useremail, message){
+        return new Promise((resolve, reject) => {
+            const transporter = nodemailer.createTransport({
+                service: process.env.EMAIL_SERVICE,
+                auth: {
+                  user: process.env.SENDER_EMAIL,
+                  pass: process.env.EMAIL_PASSWORD
+                }
+            });
+            const mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: useremail,
+                subject: process.env.EMAIL_SUBJECT,
+                html: `<h3><strong>${message}</strong></h3>`
+              };
+            transporter.sendMail(mailOptions, (error, info) => {
+                if(error){
+                    reject(error)
+                }else{
+                    resolve(info)
+                }
+
+            })
+        })
     }
 }
 

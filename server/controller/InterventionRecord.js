@@ -298,7 +298,7 @@ export const deleteInterventionRecord= (req,res) => {
 export const updateInterventionStatus = (req,res) => {
     if( req.token){
         const update = Helper.trimWhiteSpace(req.body);
-        const { userid, rolename } = req.token;
+        const { userid, rolename, email } = req.token;
         if(rolename === SUPER_ADMINISTRATOR){
             if(!Helper.validateKey(update, ['status'])){
                 return Helper.displayMessage(res,400,'status is required');
@@ -315,17 +315,21 @@ export const updateInterventionStatus = (req,res) => {
                         `
                         Helper.executeQuery(sql,[status, requestId, INTERVENTION])
                         .then(result => {
-                            res.statusCode = 200;
-                            res.setHeader('content-type', 'application/json');
-                            return res.json({
-                                status: 200,
-                                data: [
-                                    {
-                                        id: requestId,
-                                        message: 'Updated Intervention record status'
-                                    }
-                                ]
+                            Helper.sendMail(email, `Intervention record #${requestId} Status Updated to ${status}`)
+                            .then(info => {
+                                res.statusCode = 200;
+                                res.setHeader('content-type', 'application/json');
+                                return res.json({
+                                    status: 200,
+                                    data: [
+                                        {
+                                            id: requestId,
+                                            message: 'Updated Intervention record status'
+                                        }
+                                    ]
+                                })
                             })
+                            .catch(error => Helper.displayMessage(res,500,'couldn\'t send email', error))
                         })
                         .catch(error => {
                             return Helper.displayMessage(res,500, error)
