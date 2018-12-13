@@ -3,31 +3,36 @@ import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import http from 'http';
 import path from 'path';
-import routes from './route';
+import dotEnv from 'dotenv';
 import authRoute from './route/authRoute';
-import getRedFlagRecords from './route/getRedFlagRecords';
-import interventionRecord from './route/interventionRecord';
-require('dotenv').config();
+import RedFlagRecords from './route/redFlagRoute';
+import interventionRoute from './route/interventionRoute';
 
-const apiVersion = express.Router();
+dotEnv.config();
+
 const app = express();
 app.use(express.static(path.join(__dirname, 'UI')));
 app.use(express.static('UI'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/api/v1/red-flags', getRedFlagRecords);
-app.use('/api/v1/interventions', interventionRecord);
+app.use('/api/v1/red-flags', RedFlagRecords);
+app.use('/api/v1/interventions', interventionRoute);
 app.use('/api/v1/auth', authRoute);
 
-let port = process.env.PORT || 5000;
-let server = http.createServer(app)
-let io = socket().listen(server);
-io.on('connection', (socket)=>{
-    console.log(`user connected, id: ${socket.id}`);
-   
-})
+app.get('*', (req, res) => {
+    res.status(404).send({
+        message: 'Route not registered',
+    });
+});
 
-server.listen(port,()=>{console.log(`server is listening on port ${port}`)});
+const port = process.env.PORT || 5000;
+const server = http.createServer(app);
+const io = socket().listen(server);
+io.on('connection', (socket) => {
+    console.log(`user connected, id: ${socket.id}`);
+});
+
+server.listen(port, () => { console.log(`server is listening on port ${port}`); });
 
 export default server;
