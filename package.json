@@ -6,8 +6,9 @@
   "scripts": {
     "start:dev": "set NODE_ENV=DEVELOPMENT&& nodemon ./server/index.js --exec babel-node --require dotenv/config",
     "start": "set NODE_ENV=PRODUCTION&& npm run build && node ./dist/index.js",
+    "lint":"eslint server --fix",
     "build": "babel server -d dist --require dotenv/config",
-    "test": "set NODE_ENV=TEST&& nyc mocha server/test/test.js --compilers js:babel-core/register --timeout 20000 --exit",
+    "test": "set NODE_ENV=TEST&& nyc mocha server/test/**.test.js --compilers js:babel-core/register --timeout 20000 --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
@@ -24,6 +25,7 @@
   "dependencies": {
     "eslint-config-airbnb": "^17.1.0",
     "express": "^4.16.4",
+    "g": "^2.0.1",
     "http": "0.0.0",
     "pg": "^7.6.1"
   },
